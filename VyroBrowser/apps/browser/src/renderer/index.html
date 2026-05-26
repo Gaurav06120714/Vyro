@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: vyro:; img-src * data: blob:; media-src * blob:; connect-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval';">
+  <title>Vyro</title>
+  <script>
+    (function() {
+      try {
+        var stored = localStorage.getItem('vyro:theme');
+        var mode = stored ? JSON.parse(stored).state?.mode : 'dark';
+        if (mode === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+        } else if (mode === 'system') {
+          var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.classList.remove('dark', 'light');
+          document.documentElement.classList.add(isDark ? 'dark' : 'light');
+        } else {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        }
+      } catch(e) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+<body class="overflow-hidden">
+  <div id="root"></div>
+  <script type="module" src="./main.tsx"></script>
+</body>
+</html>

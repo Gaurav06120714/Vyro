@@ -1,0 +1,25 @@
+{
+  "id": "cyber",
+  "name": "Cyber",
+  "category": "bold",
+  "description": "Neon glassmorphism with bold typography and glowing accents",
+  "colors": {
+    "background": "#0A0A0F",
+    "glass": "rgba(255,255,255,0.04)",
+    "primary": "#00FF88",
+    "secondary": "#FF00AA",
+    "accent": "#00AAFF",
+    "text": "#F0F0F8",
+    "muted": "#7777AA"
+  },
+  "fonts": {
+    "heading": "Space Grotesk",
+    "body": "Inter"
+  },
+  "variables": [
+    "name", "title", "summary", "hero_tagline", "hero_description", "about_paragraph",
+    "email", "phone", "location", "linkedin_url", "github_url", "portfolio_url",
+    "skills", "work_experience", "education", "projects", "certifications"
+  ],
+  "sections": ["hero", "about", "skills", "experience", "projects", "education", "contact"]
+}

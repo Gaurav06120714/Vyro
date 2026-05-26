@@ -1,0 +1,15 @@
+{
+  "name": "vyroportify",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev:backend\"",
+    "dev:vyro": "concurrently \"npm run dev --prefix frontend\" \"npm run dev:backend\" && sleep 4 && node open-in-vyro.mjs http://localhost:3007",
+    "dev:backend": "cd backend && uvicorn app.main:app --reload --port 8001",
+    "build": "npm run build --prefix frontend",
+    "lint": "npm run lint --prefix frontend && cd backend && ruff check . && black --check . && isort --check ."
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}

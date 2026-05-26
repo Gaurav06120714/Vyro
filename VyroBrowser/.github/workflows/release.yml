@@ -1,0 +1,345 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+env:
+  NODE_VERSION: '20'
+  APP_DIR: apps/browser
+
+jobs:
+  # ── macOS Build ──────────────────────────────────────────────────────────────
+  build-mac:
+    name: Build macOS (arm64 + x64)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: ${{ env.APP_DIR }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ env.APP_DIR }}
+        run: npm ci
+
+      - name: Build & package (macOS)
+        working-directory: ${{ env.APP_DIR }}
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run package:mac
+
+      - name: Rename artifacts to production names
+        working-directory: ${{ env.APP_DIR }}/dist
+        run: |
+          for f in *arm64*.dmg; do [ -f "$f" ] && mv "$f" "Vyro-macOS-AppleSilicon-${{ github.ref_name }}.dmg" || true; done
+          for f in *x64*.dmg; do [ -f "$f" ] && mv "$f" "Vyro-macOS-Intel-${{ github.ref_name }}.dmg" || true; done
+          for f in *arm64*.zip; do [ -f "$f" ] && mv "$f" "Vyro-macOS-AppleSilicon-${{ github.ref_name }}.zip" || true; done
+          for f in *x64*.zip; do [ -f "$f" ] && mv "$f" "Vyro-macOS-Intel-${{ github.ref_name }}.zip" || true; done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-dist
+          path: |
+            ${{ env.APP_DIR }}/dist/*.dmg
+            ${{ env.APP_DIR }}/dist/*.zip
+            ${{ env.APP_DIR }}/dist/latest-mac.yml
+
+  # ── Windows Build ────────────────────────────────────────────────────────────
+  build-win:
+    name: Build Windows (x64)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: ${{ env.APP_DIR }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ env.APP_DIR }}
+        run: npm ci
+
+      - name: Build & package (Windows)
+        working-directory: ${{ env.APP_DIR }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run package:win
+
+      - name: Rename Windows artifacts
+        working-directory: ${{ env.APP_DIR }}/dist
+        shell: bash
+        run: |
+          for f in *Setup*.exe; do [ -f "$f" ] && mv "$f" "Vyro-Setup-Windows-x64-${{ github.ref_name }}.exe" || true; done
+          for f in *[Pp]ortable*.exe; do [ -f "$f" ] && mv "$f" "Vyro-Portable-Windows-x64-${{ github.ref_name }}.exe" || true; done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: win-dist
+          path: |
+            ${{ env.APP_DIR }}/dist/*.exe
+            ${{ env.APP_DIR }}/dist/latest.yml
+
+  # ── Linux Build ──────────────────────────────────────────────────────────────
+  build-linux:
+    name: Build Linux (x64)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: ${{ env.APP_DIR }}/package-lock.json
+
+      - name: Install Linux build dependencies
+        run: sudo apt-get install -y rpm fakeroot
+
+      - name: Install dependencies
+        working-directory: ${{ env.APP_DIR }}
+        run: npm ci
+
+      - name: Build & package (Linux)
+        working-directory: ${{ env.APP_DIR }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run package:linux
+
+      - name: Rename Linux artifacts
+        working-directory: ${{ env.APP_DIR }}/dist
+        run: |
+          for f in *.AppImage; do [ -f "$f" ] && mv "$f" "Vyro-Linux-${{ github.ref_name }}-x86_64.AppImage" || true; done
+          for f in *.deb; do [ -f "$f" ] && mv "$f" "Vyro-Linux-${{ github.ref_name }}-amd64.deb" || true; done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-dist
+          path: |
+            ${{ env.APP_DIR }}/dist/*.AppImage
+            ${{ env.APP_DIR }}/dist/*.deb
+
+  # ── Checksums + Publish ──────────────────────────────────────────────────────
+  publish:
+    name: Publish GitHub Release
+    needs: [build-mac, build-win, build-linux]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist-all
+          merge-multiple: true
+
+      - name: Generate SHA256 checksums
+        run: |
+          cd dist-all
+          echo "# Vyro Browser ${{ github.ref_name }} — SHA256 Checksums" > SHA256SUMS.txt
+          echo "Generated: $(date -u '+%Y-%m-%d %H:%M UTC')" >> SHA256SUMS.txt
+          echo "" >> SHA256SUMS.txt
+          for f in *.dmg *.exe *.AppImage *.deb *.zip; do
+            [ -f "$f" ] && sha256sum "$f" >> SHA256SUMS.txt || true
+          done
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Vyro Browser ${{ github.ref_name }}"
+          draft: false
+          prerelease: false
+          generate_release_notes: false
+          files: |
+            dist-all/Vyro-macOS-AppleSilicon-*.dmg
+            dist-all/Vyro-macOS-Intel-*.dmg
+            dist-all/Vyro-macOS-AppleSilicon-*.zip
+            dist-all/Vyro-macOS-Intel-*.zip
+            dist-all/Vyro-Setup-Windows-x64-*.exe
+            dist-all/Vyro-Portable-Windows-x64-*.exe
+            dist-all/Vyro-Linux-*-x86_64.AppImage
+            dist-all/Vyro-Linux-*-amd64.deb
+            dist-all/SHA256SUMS.txt
+            dist-all/latest.yml
+            dist-all/latest-mac.yml
+          body: |
+            <div align="center">
+
+            <img src="https://raw.githubusercontent.com/Gaurav06120714/VyroBrowser/main/apps/browser/assets/icon.png" width="80" />
+
+            # Vyro Browser ${{ github.ref_name }}
+
+            **The AI-first desktop browser. Local · Private · Fast.**
+
+            [![macOS](https://img.shields.io/badge/macOS-12%2B-black?style=flat-square&logo=apple)](https://github.com/Gaurav06120714/VyroBrowser/releases/tag/${{ github.ref_name }})
+            [![Windows](https://img.shields.io/badge/Windows-10%2B-0078D4?style=flat-square&logo=windows)](https://github.com/Gaurav06120714/VyroBrowser/releases/tag/${{ github.ref_name }})
+            [![Linux](https://img.shields.io/badge/Linux-Ubuntu%2020%2B-E95420?style=flat-square&logo=ubuntu)](https://github.com/Gaurav06120714/VyroBrowser/releases/tag/${{ github.ref_name }})
+
+            </div>
+
+            ---
+
+            ## 📥 Download — Pick Your Platform
+
+            | Platform | File | Notes |
+            |---|---|---|
+            | 🍎 **macOS Apple Silicon** (M1/M2/M3/M4) | `Vyro-macOS-AppleSilicon-${{ github.ref_name }}.dmg` | ⭐ Recommended for most Mac users |
+            | 🍎 **macOS Intel** | `Vyro-macOS-Intel-${{ github.ref_name }}.dmg` | For older Intel Macs (pre-2020) |
+            | 🪟 **Windows Installer** | `Vyro-Setup-Windows-x64-${{ github.ref_name }}.exe` | ⭐ Recommended — installs to Programs |
+            | 🪟 **Windows Portable** | `Vyro-Portable-Windows-x64-${{ github.ref_name }}.exe` | No install needed, run anywhere |
+            | 🐧 **Linux AppImage** | `Vyro-Linux-${{ github.ref_name }}-x86_64.AppImage` | ⭐ Recommended — works on all distros |
+            | 🐧 **Linux Debian/Ubuntu** | `Vyro-Linux-${{ github.ref_name }}-amd64.deb` | `sudo dpkg -i` to install |
+
+            > **Not sure which to pick?** Download the ⭐ Recommended file for your OS above.
+
+            ---
+
+            ## 🚀 What's New in ${{ github.ref_name }}
+
+            ### 🤖 AI Features
+            - Local AI chat powered by Ollama — no API key, zero cloud, runs 100% on your machine
+            - One-click model download: llama3.2, qwen2.5-coder, mistral, codellama, deepseek-coder
+            - Streaming AI responses token-by-token with live typing animation
+            - AI sidebar with conversation history and multi-model switching
+            - Page summarization with a single click
+
+            ### 🌐 Browser Features
+            - Full tab management with **crash recovery** and **session restore**
+            - Smart keyword navigation (`yt lofi` → YouTube, `gh react` → GitHub, `npm axios` → npmjs)
+            - Command palette (Cmd/Ctrl+K) — tabs, history, bookmarks, commands
+            - Built-in ad-blocking — network-level with per-site toggle and real-time stats
+            - **Reader Mode** powered by Mozilla Readability with Text-to-Speech
+            - **Find In Page** with live match count (3 of 12)
+            - Custom CSS/JS injection per origin
+            - Downloads manager — pause, resume, cancel, reveal in Finder/Explorer
+            - Bookmarks with folder tree, import/export
+            - Full browsing history with fuzzy search
+            - Per-profile sessions (isolated cookies and storage)
+
+            ### 🎨 UI/UX
+            - Framer Motion animations throughout — sidebar, modals, command palette, onboarding
+            - Webview loading skeletons while pages load
+            - Smooth tab transitions and hover interactions
+            - Polished empty states, loading states, and error states in all panels
+            - macOS vibrancy (native glass effect), Windows Acrylic-style blur
+
+            ### 🔒 Security
+            - Strict production Content Security Policy (no `unsafe-eval` in prod)
+            - Zod input validation on all IPC handler arguments
+            - Full context isolation — renderer has zero Node.js access
+            - IPC allowlist — preload drops any unlisted channel
+
+            ### ⚡ Performance
+            - Reader Mode uses a single reusable hidden window (eliminates 200MB leak per extraction)
+            - AbortController cleanup on AI stream completion/error
+            - Adblock site rules persisted to SQLite (no reset on restart)
+            - Native modules (`better-sqlite3`) properly unpacked from asar
+
+            ### 🖥 Platform Support
+            - **macOS**: Native vibrancy, Dock menu, traffic lights, Metal GPU acceleration for Ollama
+            - **Windows**: Custom titlebar, system tray, NSIS installer (no admin required), GPU support
+            - **Linux**: AppImage + deb packages, system tray with fallback icons, `espeak`/`festival` TTS
+            - **Auto-update**: All platforms receive silent background updates via `electron-updater`
+
+            ---
+
+            ## 🛠 Installation
+
+            **macOS**
+            Open the `.dmg` → drag Vyro to Applications. First launch: right-click → Open (bypasses Gatekeeper).
+
+            **Windows**
+            Run the installer `.exe`. If SmartScreen appears: "More info" → "Run anyway". No admin required.
+
+            **Linux (AppImage)**
+            ```bash
+            chmod +x Vyro-Linux-${{ github.ref_name }}-x86_64.AppImage
+            ./Vyro-Linux-${{ github.ref_name }}-x86_64.AppImage
+            ```
+
+            **Linux (deb)**
+            ```bash
+            sudo dpkg -i Vyro-Linux-${{ github.ref_name }}-amd64.deb
+            ```
+
+            ---
+
+            ## 🤖 Ollama Setup (for AI features)
+
+            **macOS**
+            ```bash
+            brew install ollama && brew services start ollama && ollama pull llama3.2
+            ```
+
+            **Windows** — Download from [ollama.ai/download/windows](https://ollama.ai/download/windows), then:
+            ```powershell
+            ollama pull llama3.2
+            ```
+
+            **Linux**
+            ```bash
+            curl -fsSL https://ollama.ai/install.sh | sh && ollama pull llama3.2
+            ```
+
+            > Ollama is **optional** — all browser features work without it. The onboarding wizard will guide you through setup on first launch.
+
+            ---
+
+            ## 🔐 Verify Integrity (SHA256)
+
+            Download `SHA256SUMS.txt` from the assets below and verify:
+
+            **macOS / Linux**
+            ```bash
+            sha256sum -c SHA256SUMS.txt
+            ```
+
+            **Windows (PowerShell)**
+            ```powershell
+            Get-FileHash "Vyro-Setup-Windows-x64-${{ github.ref_name }}.exe" -Algorithm SHA256
+            # Compare with value in SHA256SUMS.txt
+            ```
+
+            ---
+
+            ## ⚠️ Known Issues
+
+            - Builds are **unsigned** — Gatekeeper (macOS) and SmartScreen (Windows) warn on first launch. This is expected. See installation notes above.
+            - Ollama must be running locally for AI features to work.
+            - Linux TTS requires `espeak` or `festival`: `sudo apt install espeak`
+
+            ---
+
+            ## 📦 Auto-Update
+
+            Vyro silently checks for updates in the background. A banner appears in the browser when an update is ready — click **"Restart to update"** to install.
+
+            ---
+
+            <div align="center">
+
+            Built with ❤️ using Electron · React · TypeScript · Ollama
+
+            [⭐ Star](https://github.com/Gaurav06120714/VyroBrowser) · [🐛 Report Bug](https://github.com/Gaurav06120714/VyroBrowser/issues) · [💬 Discuss](https://github.com/Gaurav06120714/VyroBrowser/discussions) · [📖 README](https://github.com/Gaurav06120714/VyroBrowser#readme)
+
+            </div>
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

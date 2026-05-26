@@ -1,0 +1,24 @@
+{
+  "id": "aurora",
+  "name": "Aurora",
+  "category": "creative",
+  "description": "Dark electric theme with animated gradients and glowing accents",
+  "colors": {
+    "background": "#0F0F1A",
+    "primary": "#6C63FF",
+    "accent": "#00D4FF",
+    "cta": "#FF6B6B",
+    "text": "#E8E8F0",
+    "muted": "#8888AA"
+  },
+  "fonts": {
+    "heading": "Space Grotesk",
+    "body": "Inter"
+  },
+  "variables": [
+    "name", "title", "summary", "hero_tagline", "hero_description", "about_paragraph",
+    "email", "phone", "location", "linkedin_url", "github_url", "portfolio_url",
+    "skills", "work_experience", "education", "projects", "certifications"
+  ],
+  "sections": ["hero", "about", "skills", "experience", "projects", "education", "contact"]
+}

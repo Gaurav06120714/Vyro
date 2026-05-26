@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ name }} — Portfolio</title>
+  <meta name="description" content="{{ hero_description or summary or '' }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0A0A0F;
+      --layer: #0F0F1A;
+      --glass: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.08);
+      --green: #00FF88;
+      --pink: #FF00AA;
+      --blue: #00AAFF;
+      --text: #F0F0F8;
+      --muted: #7777AA;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.6; overflow-x: hidden; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes neonPulse { 0%,100% { text-shadow: 0 0 10px var(--green), 0 0 30px rgba(0,255,136,0.3); } 50% { text-shadow: 0 0 20px var(--green), 0 0 60px rgba(0,255,136,0.5), 0 0 100px rgba(0,255,136,0.2); } }
+    @keyframes scanline { from { transform: translateY(-100%); } to { transform: translateY(100vh); } }
+    @keyframes borderGlow { 0%,100% { border-color: rgba(0,255,136,0.3); } 50% { border-color: rgba(0,255,136,0.8); } }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+    /* ── Scanline overlay ── */
+    body::after {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,136,0.01) 2px, rgba(0,255,136,0.01) 4px);
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,15,0.9); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;
+    }
+    .nav-logo {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 800;
+      font-size: 1.1rem; color: var(--green);
+      animation: neonPulse 3s ease infinite;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: 0.85rem; color: var(--muted); text-decoration: none; font-family: 'Space Grotesk', sans-serif; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--green); }
+    @media (max-width: 640px) { .nav-links { display: none; } }
+
+    /* ── Hero ── */
+    #hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 8rem 2rem 4rem; position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 15% 50%, rgba(0,255,136,0.08) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 20%, rgba(255,0,170,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 80%, rgba(0,170,255,0.05) 0%, transparent 50%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image: linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-content { position: relative; z-index: 1; text-align: center; max-width: 900px; }
+    .hero-tag {
+      display: inline-block; padding: 0.3rem 1rem; margin-bottom: 2rem;
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.15em;
+      color: var(--green); border: 1px solid rgba(0,255,136,0.3);
+      border-radius: 2px; background: rgba(0,255,136,0.05);
+      animation: borderGlow 2s ease infinite;
+    }
+    .hero-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(3rem, 8vw, 6rem); font-weight: 800;
+      line-height: 1; letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    .hero-name .green { color: var(--green); }
+    .hero-name .pink { color: var(--pink); }
+    .hero-role {
+      font-size: clamp(1rem, 2vw, 1.3rem); color: var(--muted);
+      font-weight: 400; margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .hero-tagline {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem); color: var(--text);
+      margin-bottom: 1rem; animation: fadeUp 0.6s 0.3s ease both;
+    }
+    .hero-desc { color: var(--muted); max-width: 600px; margin: 0 auto 2.5rem; animation: fadeUp 0.6s 0.4s ease both; }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; animation: fadeUp 0.6s 0.5s ease both; }
+    .btn-cyber {
+      padding: 0.8rem 2rem; font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;
+      border: 1px solid var(--green); color: var(--green); background: rgba(0,255,136,0.08);
+      text-decoration: none; transition: all 0.2s; cursor: pointer;
+    }
+    .btn-cyber:hover { background: rgba(0,255,136,0.15); box-shadow: 0 0 20px rgba(0,255,136,0.3); }
+    .btn-cyber-pink {
+      padding: 0.8rem 2rem; font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;
+      border: 1px solid rgba(255,0,170,0.4); color: var(--pink); background: rgba(255,0,170,0.05);
+      text-decoration: none; transition: all 0.2s;
+    }
+    .btn-cyber-pink:hover { background: rgba(255,0,170,0.1); box-shadow: 0 0 20px rgba(255,0,170,0.2); }
+
+    /* ── Sections ── */
+    section { padding: 5rem 2rem; }
+    .container { max-width: 1000px; margin: 0 auto; }
+    .section-tag {
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.15em; color: var(--green); margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 800; letter-spacing: -0.02em; margin-bottom: 3rem;
+    }
+
+    /* ── Glass card ── */
+    .glass {
+      background: var(--glass); border: 1px solid var(--glass-border);
+      border-radius: 4px; backdrop-filter: blur(10px);
+    }
+
+    /* ── About ── */
+    #about { background: var(--layer); }
+    .about-card { padding: 2.5rem; }
+    .about-text { font-size: 1.05rem; color: var(--muted); line-height: 1.8; }
+
+    /* ── Skills ── */
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.5rem; }
+    .skill-chip {
+      padding: 0.6rem 1rem; border: 1px solid var(--glass-border);
+      background: var(--glass); color: var(--text); font-size: 0.82rem; font-weight: 500;
+      text-align: center; transition: all 0.2s; cursor: default;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .skill-chip:hover { border-color: var(--green); color: var(--green); box-shadow: 0 0 10px rgba(0,255,136,0.2); }
+
+    /* ── Experience ── */
+    #experience { background: var(--layer); }
+    .exp-list { display: grid; gap: 1rem; }
+    .exp-card { padding: 1.75rem; transition: border-color 0.2s; }
+    .exp-card:hover { border-color: rgba(0,255,136,0.4); }
+    .exp-header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .exp-role { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; }
+    .exp-company { color: var(--green); font-size: 0.9rem; margin-top: 0.2rem; }
+    .exp-date { font-size: 0.8rem; color: var(--muted); font-family: 'Space Grotesk', sans-serif; }
+    .exp-bullets { padding-left: 1.2rem; }
+    .exp-bullets li { color: var(--muted); font-size: 0.92rem; margin-bottom: 0.3rem; }
+    .exp-bullets li::marker { color: var(--green); }
+
+    /* ── Projects ── */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .project-card { padding: 1.75rem; transition: all 0.3s; position: relative; overflow: hidden; }
+    .project-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--green), var(--pink), var(--blue));
+      transform: scaleX(0); transition: transform 0.3s; transform-origin: left;
+    }
+    .project-card:hover { border-color: rgba(0,255,136,0.3); box-shadow: 0 8px 30px rgba(0,255,136,0.08); }
+    .project-card:hover::before { transform: scaleX(1); }
+    .project-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+    .project-desc { color: var(--muted); font-size: 0.88rem; margin-bottom: 1rem; line-height: 1.6; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .project-tag { font-size: 0.72rem; padding: 0.2rem 0.5rem; border: 1px solid rgba(0,255,136,0.2); color: var(--green); font-family: 'Space Grotesk', sans-serif; font-weight: 500; }
+    .project-link { font-size: 0.8rem; color: var(--blue); text-decoration: none; font-family: 'Space Grotesk', sans-serif; font-weight: 600; }
+    .project-link:hover { color: var(--text); }
+
+    /* ── Education ── */
+    #education { background: var(--layer); }
+    .edu-grid { display: grid; gap: 0.75rem; }
+    .edu-card { padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; transition: border-color 0.2s; }
+    .edu-card:hover { border-color: rgba(0,170,255,0.4); }
+    .edu-degree { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+    .edu-institution { color: var(--blue); font-size: 0.9rem; margin-top: 0.2rem; }
+    .edu-year { font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; color: var(--muted); }
+
+    /* ── Contact ── */
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; }
+    .contact-item { padding: 1.25rem; text-decoration: none; color: var(--text); transition: all 0.2s; display: block; }
+    .contact-item:hover { border-color: rgba(0,255,136,0.4); box-shadow: 0 0 20px rgba(0,255,136,0.08); }
+    .contact-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-family: 'Space Grotesk', sans-serif; margin-bottom: 0.4rem; }
+    .contact-value { font-size: 0.9rem; font-weight: 500; color: var(--green); }
+
+    /* ── Footer ── */
+    footer { padding: 2rem; text-align: center; border-top: 1px solid var(--glass-border); color: var(--muted); font-size: 0.8rem; font-family: 'Space Grotesk', sans-serif; }
+    footer a { color: var(--green); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">{{ name.split()[0] if name else 'DEV' }}.EXE</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Work</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">✦ Open to opportunities</div>
+    <h1 class="hero-name">
+      <span class="green">{{ name.split()[0] if name else '' }}</span>
+      <span class="pink"> {{ name.split()[1] if name and name.split()|length > 1 else '' }}</span>
+    </h1>
+    <p class="hero-role">{{ title }}</p>
+    {% if hero_tagline %}<p class="hero-tagline">{{ hero_tagline }}</p>{% endif %}
+    {% if hero_description or summary %}<p class="hero-desc">{{ hero_description or summary }}</p>{% endif %}
+    <div class="hero-btns">
+      {% if github_url %}<a href="{{ github_url }}" class="btn-cyber" target="_blank">// GitHub</a>{% endif %}
+      <a href="#contact" class="btn-cyber-pink">Contact_Me</a>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+{% if about_paragraph or summary %}
+<section id="about">
+  <div class="container">
+    <div class="section-tag">$ whoami</div>
+    <h2 class="section-title">About<span style="color:var(--green);">_</span></h2>
+    <div class="glass about-card">
+      <p class="about-text">{{ about_paragraph or hero_description or summary }}</p>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Skills -->
+{% if skills %}
+<section id="skills">
+  <div class="container">
+    <div class="section-tag">$ ls skills/</div>
+    <h2 class="section-title">Stack<span style="color:var(--green);">_</span></h2>
+    <div class="skills-grid">
+      {% for skill in skills %}
+      <div class="skill-chip">{{ skill }}</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Experience -->
+{% if work_experience %}
+<section id="experience">
+  <div class="container">
+    <div class="section-tag">$ cat career.log</div>
+    <h2 class="section-title">Work<span style="color:var(--green);">_</span></h2>
+    <div class="exp-list">
+      {% for job in work_experience %}
+      <div class="glass exp-card">
+        <div class="exp-header">
+          <div>
+            <div class="exp-role">{{ job.title }}</div>
+            <div class="exp-company">{{ job.company }}{% if job.location %} / {{ job.location }}{% endif %}</div>
+          </div>
+          <div class="exp-date">{{ job.start_date }}{% if job.end_date %} → {{ job.end_date }}{% endif %}</div>
+        </div>
+        {% if job.description %}
+        <ul class="exp-bullets">
+          {% for bullet in job.description %}<li>{{ bullet }}</li>{% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Projects -->
+{% if projects %}
+<section id="projects">
+  <div class="container">
+    <div class="section-tag">$ git log --oneline</div>
+    <h2 class="section-title">Projects<span style="color:var(--green);">_</span></h2>
+    <div class="projects-grid">
+      {% for project in projects %}
+      <div class="glass project-card">
+        <div class="project-name">{{ project.name }}</div>
+        {% if project.description %}<p class="project-desc">{{ project.description }}</p>{% endif %}
+        {% if project.technologies %}
+        <div class="project-tags">
+          {% for tech in project.technologies %}<span class="project-tag">{{ tech }}</span>{% endfor %}
+        </div>
+        {% endif %}
+        {% if project.url %}<a href="{{ project.url }}" class="project-link" target="_blank">→ view_project</a>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Education -->
+{% if education %}
+<section id="education">
+  <div class="container">
+    <div class="section-tag">$ cat education.txt</div>
+    <h2 class="section-title">Education<span style="color:var(--green);">_</span></h2>
+    <div class="edu-grid">
+      {% for edu in education %}
+      <div class="glass edu-card">
+        <div>
+          <div class="edu-degree">{{ edu.degree }}{% if edu.field %} · {{ edu.field }}{% endif %}</div>
+          <div class="edu-institution">{{ edu.institution }}</div>
+          {% if edu.gpa %}<div style="font-size:0.82rem;color:var(--muted);margin-top:0.25rem;">GPA: {{ edu.gpa }}</div>{% endif %}
+        </div>
+        <div class="edu-year">{{ edu.graduation_year or '' }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Contact -->
+<section id="contact">
+  <div class="container">
+    <div class="section-tag">$ ping {{ name.split()[0].lower() if name else 'me' }}</div>
+    <h2 class="section-title">Contact<span style="color:var(--green);">_</span></h2>
+    <div class="contact-grid">
+      {% if email %}
+      <a href="mailto:{{ email }}" class="glass contact-item">
+        <div class="contact-label">Email</div>
+        <div class="contact-value">{{ email }}</div>
+      </a>
+      {% endif %}
+      {% if linkedin_url %}
+      <a href="{{ linkedin_url }}" class="glass contact-item" target="_blank">
+        <div class="contact-label">LinkedIn</div>
+        <div class="contact-value">View_Profile →</div>
+      </a>
+      {% endif %}
+      {% if github_url %}
+      <a href="{{ github_url }}" class="glass contact-item" target="_blank">
+        <div class="contact-label">GitHub</div>
+        <div class="contact-value">View_Repos →</div>
+      </a>
+      {% endif %}
+      {% if location %}
+      <div class="glass contact-item">
+        <div class="contact-label">Location</div>
+        <div class="contact-value">{{ location }}</div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>{{ name }} · Built with <a href="https://vyroportify.com" target="_blank">VyroPortify</a></p>
+</footer>
+
+</body>
+</html>

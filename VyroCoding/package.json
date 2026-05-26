@@ -1,0 +1,18 @@
+{
+  "name": "vyro-coding",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "PORT=3003 COLLAB_PORT=3004 pnpm --parallel --filter './apps/*' run dev",
+    "dev:vyro": "PORT=3003 COLLAB_PORT=3004 pnpm --parallel --filter './apps/*' run dev & sleep 4 && node open-in-vyro.mjs http://localhost:3002",
+    "build": "pnpm --filter './packages/*' run build && pnpm --filter './apps/*' run build",
+    "lint": "pnpm --recursive run lint",
+    "type-check": "pnpm --recursive run type-check"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "leveldown", "sharp"]
+  }
+}

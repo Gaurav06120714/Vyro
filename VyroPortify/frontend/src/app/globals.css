@@ -1,0 +1,214 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-space-grotesk), var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+}
+
+:root {
+  --radius: 0.75rem;
+
+  /* ── VyroPortify Dashboard palette — LIGHT ─────────────────────────────── */
+  --pf-bg: #f4f4ff;
+  --pf-surface: #ffffff;
+  --pf-surface2: #eeeeff;
+  --pf-text: #1a1a2e;
+  --pf-text-dim: #2a2a4e;
+  --pf-muted: #6b7280;
+  --pf-muted-dim: #9ca3af;
+  --pf-muted-darker: #d1d5db;
+  --pf-muted-darkest: #e5e7eb;
+  --pf-accent: #6c63ff;
+  --pf-accent-hover: #5a53e0;
+  --pf-accent-text: #6c63ff;
+  --pf-border: rgba(108,99,255,0.18);
+  --pf-border-dim: rgba(108,99,255,0.1);
+  --pf-border-subtle: rgba(108,99,255,0.07);
+  --pf-border-light: rgba(108,99,255,0.15);
+  --pf-border-medium: rgba(108,99,255,0.22);
+  --pf-border-hover: rgba(108,99,255,0.45);
+  --pf-border-faint: rgba(108,99,255,0.05);
+  --pf-accent-subtle: rgba(108,99,255,0.1);
+  --pf-accent-soft: rgba(108,99,255,0.12);
+  --pf-sidebar: #1e1b4b;
+  --pf-sidebar-text: #e0e0f0;
+  --pf-sidebar-muted: #9090bb;
+
+  /* Premium Light Palette: Crisp Slate & Electric Indigo */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #475569;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #eef2ff;
+  --accent-foreground: #4f46e5;
+  --destructive: #ef4444;
+  --border: #e2e8f0;
+  --input: #f1f5f9;
+  --ring: #6366f1;
+}
+
+.dark {
+  /* ── VyroPortify Dashboard palette — DARK ──────────────────────────────── */
+  --pf-bg: #0d0d14;
+  --pf-surface: #13131e;
+  --pf-surface2: #16161f;
+  --pf-text: #e8e8f0;
+  --pf-text-dim: #c8c8e0;
+  --pf-muted: #7777aa;
+  --pf-muted-dim: #555577;
+  --pf-muted-darker: #444466;
+  --pf-muted-darkest: #333355;
+  --pf-accent: #6c63ff;
+  --pf-accent-hover: #5a53e0;
+  --pf-accent-text: #8b84ff;
+  --pf-border: rgba(108,99,255,0.15);
+  --pf-border-dim: rgba(108,99,255,0.1);
+  --pf-border-subtle: rgba(108,99,255,0.08);
+  --pf-border-light: rgba(108,99,255,0.2);
+  --pf-border-medium: rgba(108,99,255,0.25);
+  --pf-border-hover: rgba(108,99,255,0.4);
+  --pf-border-faint: rgba(108,99,255,0.06);
+  --pf-accent-subtle: rgba(108,99,255,0.12);
+  --pf-accent-soft: rgba(108,99,255,0.15);
+  --pf-sidebar: #0d0d14;
+  --pf-sidebar-text: #e8e8f0;
+  --pf-sidebar-muted: #7777aa;
+
+  /* Premium Dark Palette: Deep Obsidian & Cyber Violet */
+  --background: #020617;
+  --foreground: #f8fafc;
+  --card: #0f172a;
+  --card-foreground: #f8fafc;
+  --primary: #818cf8;
+  --primary-foreground: #ffffff;
+  --secondary: #1e293b;
+  --secondary-foreground: #94a3b8;
+  --muted: #1e293b;
+  --muted-foreground: #64748b;
+  --accent: #1e1b4b;
+  --accent-foreground: #a5b4fc;
+  --destructive: #f87171;
+  --border: rgba(129, 140, 248, 0.1);
+  --input: #1e293b;
+  --ring: #818cf8;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--pf-bg);
+  color: var(--pf-text);
+  font-family: var(--font-space-grotesk), var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Smooth theme transitions on all elements */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: ease;
+  transition-duration: 0.2s;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── Marketing page helpers ─────────────────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee { animation: marquee 28s linear infinite; }
+.animate-marquee:hover { animation-play-state: paused; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+.animate-float { animation: float 4s ease-in-out infinite; }
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+  50%       { box-shadow: 0 0 50px rgba(99, 102, 241, 0.6), 0 0 100px rgba(99, 102, 241, 0.2); }
+}
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.animate-shimmer {
+  background: linear-gradient(90deg, #6366f1 0%, #00d4ff 25%, #f472b6 50%, #6366f1 75%, #00d4ff 100%);
+  background-size: 200% auto;
+  animation: shimmer 4s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Grid texture for hero */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.06) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Radial fade mask */
+.mask-radial-fade {
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+}
+
+/* Skeleton shimmer */
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Accordion animations */
+@keyframes accordion-down {
+  from { height: 0; }
+  to   { height: var(--radix-accordion-content-height); }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to   { height: 0; }
+}
+.animate-accordion-down { animation: accordion-down 0.22s ease-out; }
+.animate-accordion-up   { animation: accordion-up 0.22s ease-out; }
+
+/* Toast theme */
+[data-sonner-toaster] [data-sonner-toast] {
+  --normal-bg: var(--card);
+  --normal-border: var(--border);
+  --normal-text: var(--foreground);
+}

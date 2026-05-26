@@ -1,0 +1,24 @@
+{
+  "id": "minimal",
+  "name": "Minimal",
+  "category": "minimal",
+  "description": "Clean white typography-focused design with monochrome elegance",
+  "colors": {
+    "background": "#FAFAFA",
+    "surface": "#FFFFFF",
+    "primary": "#111111",
+    "accent": "#555555",
+    "muted": "#888888",
+    "border": "#E5E5E5"
+  },
+  "fonts": {
+    "heading": "Geist",
+    "body": "Geist"
+  },
+  "variables": [
+    "name", "title", "summary", "hero_tagline", "hero_description", "about_paragraph",
+    "email", "phone", "location", "linkedin_url", "github_url", "portfolio_url",
+    "skills", "work_experience", "education", "projects", "certifications"
+  ],
+  "sections": ["hero", "about", "skills", "experience", "projects", "education", "contact"]
+}

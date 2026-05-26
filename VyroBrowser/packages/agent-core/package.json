@@ -1,0 +1,31 @@
+{
+  "name": "@vyro/agent-core",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "ollama": "^0.5.0",
+    "@vyro/ai-prompts": "workspace:*",
+    "@vyro/browser-engine": "workspace:*",
+    "@vyro/dom-parser": "workspace:*",
+    "@vyro/shared-types": "workspace:*",
+    "pino": "^9.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@types/node": "^20.0.0"
+  }
+}

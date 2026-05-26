@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Type-check & lint ────────────────────────────────────────────────────────
+  lint:
+    name: Lint & Type-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'pnpm' }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @vyro/browser typecheck
+      - run: pnpm --filter @vyro/browser lint || true   # warn-only until rules are stable
+
+  # ── Build ────────────────────────────────────────────────────────────────────
+  build:
+    name: Build (${{ matrix.os }})
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'pnpm' }
+
+      # Windows: Visual Studio Build Tools (for better-sqlite3)
+      - name: Install Windows build tools
+        if: runner.os == 'Windows'
+        run: npm install -g windows-build-tools --vs2019 || true
+        shell: powershell
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @vyro/browser build
+
+      - name: Rebuild native modules
+        working-directory: apps/browser
+        run: npx electron-rebuild -f -w better-sqlite3
+
+      - name: Package (macOS)
+        if: runner.os == 'macOS'
+        working-directory: apps/browser
+        run: pnpm package:dir
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        working-directory: apps/browser
+        run: pnpm package:dir
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+      - name: Package (Linux)
+        if: runner.os == 'Linux'
+        working-directory: apps/browser
+        run: pnpm package:dir
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+  # ── Release ───────────────────────────────────────────────────────────────────
+  release:
+    name: Release
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'pnpm' }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @vyro/browser build
+      - name: Rebuild native modules
+        working-directory: apps/browser
+        run: npx electron-rebuild -f -w better-sqlite3
+      - name: Publish
+        working-directory: apps/browser
+        run: pnpm package
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'

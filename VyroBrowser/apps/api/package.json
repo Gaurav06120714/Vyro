@@ -1,0 +1,38 @@
+{
+  "name": "@vyro/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "db:generate": "drizzle-kit generate"
+  },
+  "dependencies": {
+    "@fastify/cors": "^9.0.0",
+    "@fastify/helmet": "^11.0.0",
+    "@fastify/websocket": "^8.0.0",
+    "@vyro/agent-core": "workspace:*",
+    "@vyro/browser-engine": "workspace:*",
+    "@vyro/shared-types": "workspace:*",
+    "better-sqlite3": "^9.6.0",
+    "drizzle-orm": "^0.30.0",
+    "fastify": "^4.27.0",
+    "pino": "^9.0.0",
+    "pino-pretty": "^11.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/node": "^20.0.0",
+    "drizzle-kit": "^0.21.0",
+    "tsx": "^4.11.0",
+    "typescript": "^5.4.0"
+  }
+}

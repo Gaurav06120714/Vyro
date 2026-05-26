@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Vyro Logo Concepts</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f0f10; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #e4e4f0; padding: 48px; }
+  h2 { font-size: 13px; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 40px; text-align: center; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 900px; margin: 0 auto; }
+  .card { background: #18181b; border: 1px solid #2a2a35; border-radius: 16px; padding: 40px 24px 28px; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .card:hover { border-color: #6366f1; }
+  .label { font-size: 12px; color: #6366f1; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+  .desc { font-size: 11px; color: #555; text-align: center; line-height: 1.6; }
+  .wordmark { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+  .wordmark span { font-size: 26px; font-weight: 800; letter-spacing: -1px; }
+</style>
+</head>
+<body>
+<h2>Vyro — Logo Concepts</h2>
+<div class="grid">
+
+  <!-- OPTION 1: Gradient V bolt -->
+  <div class="card">
+    <div class="label">Option 1</div>
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#818cf8"/>
+          <stop offset="100%" stop-color="#6366f1"/>
+        </linearGradient>
+      </defs>
+      <rect width="80" height="80" rx="20" fill="#1e1e2e"/>
+      <!-- Bold V shape -->
+      <path d="M18 20 L40 58 L62 20" stroke="url(#g1)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <!-- Speed dot -->
+      <circle cx="40" cy="62" r="4" fill="#6366f1"/>
+    </svg>
+    <div class="wordmark">
+      <svg width="22" height="22" viewBox="0 0 80 80" fill="none">
+        <rect width="80" height="80" rx="20" fill="#1e1e2e"/>
+        <path d="M18 20 L40 58 L62 20" stroke="#6366f1" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="40" cy="62" r="4" fill="#6366f1"/>
+      </svg>
+      <span style="background: linear-gradient(135deg,#818cf8,#6366f1); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Vyro</span>
+    </div>
+    <div class="desc">Bold V with gradient stroke<br/>Minimal & modern</div>
+  </div>
+
+  <!-- OPTION 2: Shield / hexagon V -->
+  <div class="card">
+    <div class="label">Option 2</div>
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+      <defs>
+        <linearGradient id="g2" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a78bfa"/>
+          <stop offset="100%" stop-color="#6366f1"/>
+        </linearGradient>
+      </defs>
+      <!-- Hexagon background -->
+      <path d="M40 6 L70 22 L70 58 L40 74 L10 58 L10 22 Z" fill="url(#g2)"/>
+      <!-- White V -->
+      <path d="M24 26 L40 52 L56 26" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <div class="wordmark">
+      <svg width="22" height="22" viewBox="0 0 80 80" fill="none">
+        <path d="M40 6 L70 22 L70 58 L40 74 L10 58 L10 22 Z" fill="#6366f1"/>
+        <path d="M24 26 L40 52 L56 26" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <span style="color:#e4e4f0; font-size:26px; font-weight:800; letter-spacing:-1px;">Vyro</span>
+    </div>
+    <div class="desc">Hexagon with white V<br/>Strong & premium feel</div>
+  </div>
+
+  <!-- OPTION 3: Circle orbit / globe -->
+  <div class="card">
+    <div class="label">Option 3</div>
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+      <defs>
+        <linearGradient id="g3" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#38bdf8"/>
+          <stop offset="100%" stop-color="#6366f1"/>
+        </linearGradient>
+      </defs>
+      <rect width="80" height="80" rx="20" fill="#0f0f10"/>
+      <!-- Outer ring -->
+      <circle cx="40" cy="40" r="32" stroke="url(#g3)" stroke-width="2.5" stroke-dasharray="6 4"/>
+      <!-- Inner V -->
+      <path d="M22 26 L40 54 L58 26" stroke="url(#g3)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <div class="wordmark">
+      <svg width="22" height="22" viewBox="0 0 80 80" fill="none">
+        <rect width="80" height="80" rx="20" fill="#0f0f10"/>
+        <circle cx="40" cy="40" r="32" stroke="#6366f1" stroke-width="2.5" stroke-dasharray="6 4"/>
+        <path d="M22 26 L40 54 L58 26" stroke="#6366f1" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <span style="background: linear-gradient(135deg,#38bdf8,#6366f1); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Vyro</span>
+    </div>
+    <div class="desc">Orbit ring around V<br/>Browser / web feel</div>
+  </div>
+
+  <!-- OPTION 4: Lightning V -->
+  <div class="card">
+    <div class="label">Option 4</div>
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+      <defs>
+        <linearGradient id="g4" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#f59e0b"/>
+          <stop offset="100%" stop-color="#6366f1"/>
+        </linearGradient>
+      </defs>
+      <rect width="80" height="80" rx="20" fill="#18181b"/>
+      <!-- Lightning bolt V hybrid -->
+      <path d="M20 18 L36 42 L28 42 L44 64 M44 64 L60 18" stroke="url(#g4)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <div class="wordmark">
+      <svg width="22" height="22" viewBox="0 0 80 80" fill="none">
+        <rect width="80" height="80" rx="20" fill="#18181b"/>
+        <path d="M20 18 L36 42 L28 42 L44 64 M44 64 L60 18" stroke="#6366f1" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <span style="background: linear-gradient(135deg,#f59e0b,#6366f1); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Vyro</span>
+    </div>
+    <div class="desc">Lightning bolt + V shape<br/>Speed & energy</div>
+  </div>
+
+  <!-- OPTION 5: Rounded pill wordmark -->
+  <div class="card">
+    <div class="label">Option 5</div>
+    <svg width="120" height="80" viewBox="0 0 120 80" fill="none">
+      <defs>
+        <linearGradient id="g5" x1="0" y1="0" x2="120" y2="80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#818cf8"/>
+          <stop offset="100%" stop-color="#6366f1"/>
+        </linearGradient>
+      </defs>
+      <rect width="120" height="80" rx="20" fill="#1e1e2e"/>
+      <text x="60" y="52" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif" font-weight="800" font-size="36" letter-spacing="-2" fill="url(#g5)">vyro</text>
+    </svg>
+    <div class="wordmark">
+      <span style="background: linear-gradient(135deg,#818cf8,#6366f1); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-size:24px; font-weight:800; letter-spacing:-1px;">vyro</span>
+    </div>
+    <div class="desc">Pure wordmark<br/>Clean lowercase type</div>
+  </div>
+
+  <!-- OPTION 6: Diamond V -->
+  <div class="card">
+    <div class="label">Option 6</div>
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+      <defs>
+        <linearGradient id="g6a" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#6366f1"/>
+          <stop offset="100%" stop-color="#4f46e5"/>
+        </linearGradient>
+        <linearGradient id="g6b" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#818cf8" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#6366f1" stop-opacity="0.1"/>
+        </linearGradient>
+      </defs>
+      <!-- Diamond shape -->
+      <path d="M40 8 L72 40 L40 72 L8 40 Z" fill="url(#g6a)"/>
+      <path d="M40 8 L72 40 L40 72 L8 40 Z" fill="url(#g6b)"/>
+      <!-- V inside -->
+      <path d="M22 30 L40 52 L58 30" stroke="white" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <div class="wordmark">
+      <svg width="22" height="22" viewBox="0 0 80 80" fill="none">
+        <path d="M40 8 L72 40 L40 72 L8 40 Z" fill="#6366f1"/>
+        <path d="M22 30 L40 52 L58 30" stroke="white" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <span style="color:#e4e4f0; font-size:26px; font-weight:800; letter-spacing:-1px;">Vyro</span>
+    </div>
+    <div class="desc">Diamond with V cutout<br/>Sharp & distinctive</div>
+  </div>
+
+</div>
+</body>
+</html>
