@@ -49,11 +49,11 @@
     "autoprefixer": "^10.4.17",
     "concurrently": "^8.2.2",
     "electron": "^31.0.0",
-    "electron-builder": "^24.9.1",
+    "electron-builder": "^24.13.3",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.3.3",
-    "vite": "^5.0.12"
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21"
   },
   "build": {
     "appId": "com.vyro.browser",
@@ -180,7 +180,7 @@
     "dmg": {
       "title": "Install Vyro Browser",
       "icon": "assets/icon.icns",
-      "background": "#1a1a2e",
+      "backgroundColor": "#1a1a2e",
       "iconSize": 160,
       "iconTextSize": 13,
       "window": {

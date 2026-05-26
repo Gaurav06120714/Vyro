@@ -89,6 +89,7 @@ export class WindowManager {
   createMain(): BrowserWindow {
     const saved = loadBounds();
     const bounds = saved ? ensureVisible(saved) : { x: undefined, y: undefined, width: 1280, height: 800 };
+    const iconPath = path.join(app.getAppPath(), 'assets/icon.png');
 
     const platformOptions = getPlatformWindowOptions();
 
@@ -100,13 +101,14 @@ export class WindowManager {
       minWidth: 800,
       minHeight: 600,
       ...platformOptions,
+      icon: iconPath,
       show: false,
       // PERF: sandbox=true isolates renderer process — reduces crash blast radius
       // and limits GPU/memory usage per renderer.
       webPreferences: {
         contextIsolation: true,
         nodeIntegration: false,
-        sandbox: true,
+        sandbox: false,
         webviewTag: true,
         preload: path.join(app.getAppPath(), 'dist-main/main/preload/browser-preload.js'),
         // PERF: Throttle background timers/animations when window is hidden

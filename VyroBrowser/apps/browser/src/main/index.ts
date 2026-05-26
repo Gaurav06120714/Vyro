@@ -63,6 +63,10 @@ if (shouldDisableHardwareAcceleration()) {
 
 // ── App identity — must be set BEFORE app.whenReady() ─────────────────────
 app.name = 'Vyro';
+// macOS: override the process name shown in the menu bar
+if (process.platform === 'darwin') {
+  try { process.title = 'Vyro'; } catch { /* ignore */ }
+}
 
 // Windows: set App User Model ID so taskbar/start menu shows "Vyro" not "Electron"
 if (process.platform === 'win32') {
@@ -105,6 +109,12 @@ function createWindow(): BrowserWindow {
 
 // ── App ready ─────────────────────────────────────────────────────────────
 app.whenReady().then(async () => {
+  // Set Dock icon to Vyro logo on macOS
+  if (process.platform === 'darwin') {
+    const iconPath = path.join(app.getAppPath(), 'assets/icon.png');
+    app.dock.setIcon(iconPath);
+  }
+
   // Clean up old app identity remnants (one-time migration)
   runStartupMigration();
 
@@ -229,7 +239,7 @@ app.on('before-quit', () => {
 });
 
 // PERF: Clean up stale GPU cache on crash recovery
-app.on('gpu-process-crashed', (_event, killed) => {
+app.on('gpu-process-crashed' as never, (_event: unknown, killed: boolean) => {
   if (!killed) {
     markGpuCrash();
     // GPU process crashed naturally — clear cache to avoid corrupt state
