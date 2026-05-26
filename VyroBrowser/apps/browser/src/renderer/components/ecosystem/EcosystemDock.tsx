@@ -21,7 +21,7 @@ const DOCK_APPS: DockAppMeta[] = [
   {
     id: 'coding',
     name: 'VyroCoding',
-    url: 'http://localhost:3002',
+    url: 'https://brilliant-starlight-d17a80.netlify.app',
     accent: '#f59e0b',
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -33,7 +33,7 @@ const DOCK_APPS: DockAppMeta[] = [
   {
     id: 'music',
     name: 'VyroMusic',
-    url: 'http://localhost:3005',
+    url: 'https://rococo-croissant-12c753.netlify.app',
     accent: '#ec4899',
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -46,7 +46,7 @@ const DOCK_APPS: DockAppMeta[] = [
   {
     id: 'notes',
     name: 'VyroNotes',
-    url: 'http://localhost:3001',
+    url: 'https://velvety-liger-cf8ac3.netlify.app',
     accent: '#10b981',
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -60,7 +60,7 @@ const DOCK_APPS: DockAppMeta[] = [
   {
     id: 'portify',
     name: 'VyroPortify',
-    url: 'http://localhost:3007',
+    url: 'https://adorable-boba-fbc545.netlify.app',
     accent: '#6366f1',
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

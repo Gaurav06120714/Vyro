@@ -14,6 +14,7 @@ export interface EcosystemApp {
   name: string;
   port: number;
   url: string;
+  remoteUrl?: string;
   workDir: string;
   startCmd: string;
   startArgs: string[];
@@ -64,6 +65,7 @@ const APPS: Record<AppId, Omit<EcosystemApp, 'status'>> = {
     name: 'VyroCoding',
     port: 3002,
     url: 'https://brilliant-starlight-d17a80.netlify.app',
+    remoteUrl: 'https://brilliant-starlight-d17a80.netlify.app',
     workDir: getAppWorkDir('coding', path.join(VYRO_WORKSPACE, 'VyroCoding', 'apps', 'web')),
     startCmd: 'npm',
     startArgs: ['run', 'dev'],
@@ -74,6 +76,7 @@ const APPS: Record<AppId, Omit<EcosystemApp, 'status'>> = {
     name: 'VyroMusic',
     port: 3005,
     url: 'https://rococo-croissant-12c753.netlify.app',
+    remoteUrl: 'https://rococo-croissant-12c753.netlify.app',
     workDir: getAppWorkDir('music', path.join(VYRO_WORKSPACE, 'VyroMusic')),
     startCmd: 'npm',
     startArgs: ['run', 'dev', '--workspace=apps/web'],
@@ -83,6 +86,7 @@ const APPS: Record<AppId, Omit<EcosystemApp, 'status'>> = {
     name: 'VyroNotes',
     port: 3001,
     url: 'https://velvety-liger-cf8ac3.netlify.app',
+    remoteUrl: 'https://velvety-liger-cf8ac3.netlify.app',
     workDir: getAppWorkDir('notes', path.join(VYRO_WORKSPACE, 'VyroNotes')),
     startCmd: 'npm',
     startArgs: ['run', 'dev'],
@@ -92,6 +96,7 @@ const APPS: Record<AppId, Omit<EcosystemApp, 'status'>> = {
     name: 'VyroPortify',
     port: 3007,
     url: 'https://adorable-boba-fbc545.netlify.app',
+    remoteUrl: 'https://adorable-boba-fbc545.netlify.app',
     workDir: getAppWorkDir('portify', path.join(VYRO_WORKSPACE, 'VyroPortify')),
     startCmd: 'npm',
     startArgs: ['run', 'dev'],
@@ -132,6 +137,15 @@ class EcosystemManager {
   async launch(id: AppId): Promise<{ ok: boolean; error?: string }> {
     const meta = APPS[id];
     if (!meta) return { ok: false, error: `Unknown app: ${id}` };
+
+    // If a remote URL is configured, skip local start — mark online immediately
+    if (meta.remoteUrl) {
+      this.statuses.set(id, 'starting');
+      this.pushStatus(id, 'starting');
+      this.statuses.set(id, 'online');
+      this.pushStatus(id, 'online');
+      return { ok: true };
+    }
 
     // If already online, just return ok
     const alreadyUp = await this.pingPort(meta.port);

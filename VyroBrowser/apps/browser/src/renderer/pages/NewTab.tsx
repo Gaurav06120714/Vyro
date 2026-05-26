@@ -40,7 +40,7 @@ const ECOSYSTEM_APPS: AppMeta[] = [
     name: 'VyroCoding',
     desc: 'AI-powered code editor',
     port: 3002,
-    url: 'http://localhost:3002',
+    url: 'https://brilliant-starlight-d17a80.netlify.app',
     accent: '#f59e0b',
     accentRgb: '245,158,11',
     icon: (
@@ -55,7 +55,7 @@ const ECOSYSTEM_APPS: AppMeta[] = [
     name: 'VyroMusic',
     desc: 'AI music discovery',
     port: 3005,
-    url: 'http://localhost:3005',
+    url: 'https://rococo-croissant-12c753.netlify.app',
     accent: '#ec4899',
     accentRgb: '236,72,153',
     icon: (
@@ -71,7 +71,7 @@ const ECOSYSTEM_APPS: AppMeta[] = [
     name: 'VyroNotes',
     desc: 'Smart notes & tasks',
     port: 3001,
-    url: 'http://localhost:3001',
+    url: 'https://velvety-liger-cf8ac3.netlify.app',
     accent: '#10b981',
     accentRgb: '16,185,129',
     icon: (
@@ -88,7 +88,7 @@ const ECOSYSTEM_APPS: AppMeta[] = [
     name: 'VyroPortify',
     desc: 'Portfolio builder',
     port: 3007,
-    url: 'http://localhost:3007',
+    url: 'https://adorable-boba-fbc545.netlify.app',
     accent: '#6366f1',
     accentRgb: '99,102,241',
     icon: (
