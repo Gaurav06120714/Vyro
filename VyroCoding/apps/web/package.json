@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
-    "@vyro/types": "workspace:*",
     "clsx": "^2.1.0",
     "lib0": "^0.2.117",
     "liquid-glass-react": "^1.1.1",
