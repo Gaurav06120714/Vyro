@@ -1,6 +1,6 @@
 [build]
-  base    = "VyroCoding/apps/web"
-  command = "next build"
+  base    = "VyroNotes"
+  command = "npm install && next build"
   publish = ".next"
 
 [build.environment]
