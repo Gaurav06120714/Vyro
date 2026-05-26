@@ -9,7 +9,6 @@
   "dependencies": {
     "@stripe/react-stripe-js": "^6.4.0",
     "@stripe/stripe-js": "^9.6.0",
-    "@vyro/types": "*",
     "framer-motion": "^11.3.0",
     "hls.js": "^1.5.13",
     "lucide-react": "^0.400.0",
@@ -20,6 +19,7 @@
     "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.0.0",
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
