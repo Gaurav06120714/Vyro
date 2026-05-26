@@ -1,6 +1,6 @@
 [build]
   base    = "VyroCoding/apps/web"
-  command = "next build"
+  command = "pnpm install --no-frozen-lockfile && next build"
   publish = ".next"
 
 [build.environment]
