@@ -1,0 +1,7 @@
+[build]
+  base    = "VyroCoding/apps/web"
+  command = "next build"
+  publish = ".next"
+
+[build.environment]
+  NEXT_TELEMETRY_DISABLED = "1"
